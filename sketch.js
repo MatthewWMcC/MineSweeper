@@ -9,20 +9,24 @@ var cellH = canHeight / rows;
 
 function Cell(x, y) {
     this.revealed = false;
-    this.value = (Math.random() > 0.8 ? 'mine' : '');
+    this.blocked = false;
+    this.value = (Math.random() > 0.80 ? 'mine' : '');
     this.pos = {
         x: x,
         y: y
     }
+    this.color = { r: 200, g: 200, b: 200 }
     this.show = () => {
         textSize(20);
         textAlign(CENTER, CENTER);
-        fill(100, 200, 200)
+        fill(this.color.r, this.color.g, this.color.b);
         rect(this.pos.x, this.pos.y, cellW, cellH);
         if (this.revealed) {
+            fill(255);
+            rect(this.pos.x, this.pos.y, cellW, cellH);
+            fill(0);
             text(this.value, this.pos.x + cellW / 2, this.pos.y + cellH / 2)
         }
-
     }
 }
 
@@ -89,9 +93,25 @@ function make2DArray(cols, rows) {
     return arr;
 }
 
-function mousePressed() {
-    if (mouseX > canWidth || mouseY > canHeight) {
-        return
+function mousePressed(e) {
+    var cell = grid[floor(mouseX / cellW)][floor(mouseY / cellH)]
+    if (mouseButton === LEFT) {
+        if (mouseX > canWidth || mouseY > canHeight) {
+            return
+        }
+        if (!cell.blocked) {
+            cell.revealed = true;
+        }
+
     }
-    grid[floor(mouseX / cellW)][floor(mouseY / cellH)].revealed = true;
+    if (mouseButton === RIGHT) {
+        if (cell.blocked) {
+            cell.color = { r: 200, g: 200, b: 200 };
+        } else {
+            cell.color = { r: 200, g: 0, b: 0 };
+        }
+
+        cell.blocked = !cell.blocked;
+    }
+
 }

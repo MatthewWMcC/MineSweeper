@@ -3,6 +3,17 @@
 <head>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
     <script src="sketch.js"></script>
+    <script type="text/javascript">
+        if (document.addEventListener) {
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+            }, false);
+        } else {
+            document.attachEvent('oncontextmenu', function () {
+                window.event.returnValue = false;
+            });
+        }
+    </script>
 </head>
 
 <body>
