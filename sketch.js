@@ -4,8 +4,8 @@ var rows = 10;
 var cols = 10;
 var canWidth = 600;
 var canHeight = 600;
-cellW = canWidth / cols;
-cellH = canHeight / rows;
+var cellW = canWidth / cols;
+var cellH = canHeight / rows;
 
 function Cell(x, y) {
     this.revealed = false;
@@ -15,8 +15,14 @@ function Cell(x, y) {
         y: y
     }
     this.show = () => {
+        textSize(20);
+        textAlign(CENTER, CENTER);
+        fill(100, 200, 200)
         rect(this.pos.x, this.pos.y, cellW, cellH);
-        text(this.value, this.pos.x + cellW / 4, this.pos.y + cellH / 2)
+        if (this.revealed) {
+            text(this.value, this.pos.x + cellW / 2, this.pos.y + cellH / 2)
+        }
+
     }
 }
 
@@ -81,4 +87,11 @@ function make2DArray(cols, rows) {
         arr[j] = new Array(cols)
     }
     return arr;
+}
+
+function mousePressed() {
+    if (mouseX > canWidth || mouseY > canHeight) {
+        return
+    }
+    grid[floor(mouseX / cellW)][floor(mouseY / cellH)].revealed = true;
 }
