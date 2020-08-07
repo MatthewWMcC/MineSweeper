@@ -2,21 +2,21 @@
 var grid;
 var rows = 10;
 var cols = 10;
-var canWidth = 400;
-var canHeight = 400;
+var canWidth = 600;
+var canHeight = 600;
 cellW = canWidth / cols;
 cellH = canHeight / rows;
 
 function Cell(x, y) {
     this.revealed = false;
-    this.value = (Math.random() > 0.75 ? 'bee' : '');
+    this.value = (Math.random() > 0.8 ? 'mine' : '');
     this.pos = {
         x: x,
         y: y
     }
     this.show = () => {
         rect(this.pos.x, this.pos.y, cellW, cellH);
-        text(this.value, this.pos.x + cellW / 2, this.pos.y + cellH / 2)
+        text(this.value, this.pos.x + cellW / 4, this.pos.y + cellH / 2)
     }
 }
 
@@ -26,6 +26,40 @@ function setup() {
     for (var j = 0; j < rows; j++) {
         for (var i = 0; i < cols; i++) {
             grid[j][i] = new Cell(j * (canHeight / rows), i * (canWidth / cols));
+        }
+    }
+    for (var j = 0; j < rows; j++) {
+        for (var i = 0; i < cols; i++) {
+            var counter = 0;
+            if (grid[j][i].value === 'mine') {
+                continue;
+            }
+            if (j != 0 && grid[j - 1][i].value === 'mine') { // top
+                counter += 1;
+            }
+            if (i != 0 && grid[j][i - 1].value === 'mine') {//left
+                counter += 1;
+            }
+            if (j != 0 && i != 0 && grid[j - 1][i - 1].value === 'mine') {//top left
+                counter += 1;
+            }
+            if (i != cols - 1 && grid[j][i + 1].value === 'mine') { //right
+                counter += 1;
+            }
+            if (j != rows - 1 && i != 0 && grid[j + 1][i - 1].value === 'mine') {//bottom left
+                counter += 1;
+            }
+            if (i != cols - 1 && j != 0 && grid[j - 1][i + 1].value === 'mine') { //top right
+                counter += 1;
+            }
+            if (j != rows - 1 && i != cols - 1 && grid[j + 1][i + 1].value === 'mine') {//bottom right
+                counter += 1;
+            }
+            if (j != rows - 1 && grid[j + 1][i].value === 'mine') { //bottom
+                counter += 1;
+            }
+            grid[j][i].value = (counter === 0 ? '' : counter);
+
         }
     }
 }
