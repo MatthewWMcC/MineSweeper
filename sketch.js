@@ -10,10 +10,14 @@ var cellH = canHeight / rows;
 function Cell(x, y) {
     this.revealed = false;
     this.blocked = false;
-    this.value = (Math.random() > 0.80 ? 'mine' : '');
+    this.value = (Math.random() > .8 ? 'mine' : '');
     this.pos = {
         x: x,
         y: y
+    }
+    this.gridPos = {
+        j: floor(y / cellH),
+        i: floor(x / cellW)
     }
     this.color = { r: 200, g: 200, b: 200 }
     this.show = () => {
@@ -100,6 +104,10 @@ function mousePressed(e) {
             return
         }
         if (!cell.blocked) {
+
+            if (cell.value === '') {
+                revealCell(cell);
+            }
             cell.revealed = true;
         }
 
@@ -112,6 +120,30 @@ function mousePressed(e) {
         }
 
         cell.blocked = !cell.blocked;
+    }
+
+}
+function revealCell(cell) {
+    if (cell.revealed === true) {
+        return;
+    }
+    cell.blocked = false;
+    cell.revealed = true;
+    if (cell.value != '') {
+        return
+    }
+    console.log(cell.gridPos.j, cell.gridPos.i)
+    if (cell.gridPos.j != 0 && grid[cell.gridPos.i][cell.gridPos.j - 1].value != 'mine') {//up
+        revealCell(grid[cell.gridPos.i][cell.gridPos.j - 1]);
+    }
+    if (cell.gridPos.j != rows - 1 && grid[cell.gridPos.i][cell.gridPos.j + 1].value != 'mine') {//down
+        revealCell(grid[cell.gridPos.i][cell.gridPos.j + 1]);
+    }
+    if (cell.gridPos.i != 0 && grid[cell.gridPos.i - 1][cell.gridPos.j].value != 'mine') {//left
+        revealCell(grid[cell.gridPos.i - 1][cell.gridPos.j]);
+    }
+    if (cell.gridPos.i != cols - 1 && grid[cell.gridPos.i + 1][cell.gridPos.j].value != 'mine') {//right
+        revealCell(grid[cell.gridPos.i + 1][cell.gridPos.j]);
     }
 
 }
